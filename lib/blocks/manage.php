@@ -46,6 +46,7 @@ namespace Icybee\Modules\Forms\ManageBlock;
 
 use Icybee\ManageBlock\Column;
 use Icybee\ManageBlock\FilterDecorator;
+use Brickrouge\Alert;
 
 /**
  * Representation of the `modelid` column
@@ -70,6 +71,10 @@ class ModelIdColumn extends Column
 		if (isset(self::$modelid_models[$modelid]))
 		{
 			$label = $this->t(self::$modelid_models[$modelid]['title']);
+		}
+		else
+		{
+			return new Alert("Undefined model: $modelid", array(Alert::CONTEXT => Alert::CONTEXT_ERROR, Alert::UNDISSMISABLE => true));
 		}
 
 		return new FilterDecorator($record, $property, $this->is_filtering, $label);
