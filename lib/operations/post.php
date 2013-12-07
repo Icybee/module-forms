@@ -40,7 +40,7 @@ class PostOperation extends \ICanBoogie\Operation
 	 *
 	 * @return Form
 	 */
-	protected function get_record()
+	protected function lazy_get_record()
 	{
 		$nid = $this->request[Module::OPERATION_POST_ID];
 

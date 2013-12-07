@@ -77,7 +77,7 @@ class Form extends \Icybee\Modules\Nodes\Node
 	 *
 	 * @return array
 	 */
-	protected function get_form_model()
+	protected function lazy_get_form_model()
 	{
 		global $core;
 
@@ -116,7 +116,7 @@ class Form extends \Icybee\Modules\Nodes\Node
 	 *
 	 * @return \Brickrouge\Form
 	 */
-	protected function get_form()
+	protected function lazy_get_form()
 	{
 		$class = $this->form_model['class'];
 
