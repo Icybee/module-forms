@@ -96,7 +96,7 @@ class ContactForm extends \Brickrouge\Form
 	{
 		global $core;
 
-		$p = \Patron\PREFIX;
+		$p = \Patron\Engine::PREFIX;
 
 		return array
 		(
