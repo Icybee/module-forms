@@ -7,6 +7,7 @@ use ICanBoogie\ActiveRecord\Model;
 
 return array
 (
+	Module::T_ID => 'forms',
 	Module::T_CATEGORY => 'feedback',
 	Module::T_DESCRIPTION => 'Create forms based on models',
 	Module::T_EXTENDS => 'nodes',
