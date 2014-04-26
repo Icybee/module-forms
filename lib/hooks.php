@@ -109,14 +109,15 @@ class Hooks
 				$bind = $event->request->params;
 				$template = $record->notify_template;
 				$mailer = null;
-				$mailer_tags = array
-				(
-					Mailer::T_BCC => $record->notify_bcc,
-					Mailer::T_DESTINATION => $record->notify_destination,
-					Mailer::T_FROM => $record->notify_from,
-					Mailer::T_SUBJECT => $record->notify_subject,
-					Mailer::T_MESSAGE => null
-				);
+				$mailer_tags = [
+
+					'bcc' => $record->notify_bcc,
+					'to' => $record->notify_destination,
+					'from' => $record->notify_from,
+					'subject' => $record->notify_subject,
+					'body' => null
+
+				];
 
 				$notify_params = new NotifyParams
 				(
@@ -173,9 +174,9 @@ class Hooks
 				{
 					$patron = new \Patron\Engine();
 
-					if (!$mailer_tags[Mailer::T_MESSAGE])
+					if (!$mailer_tags['body'])
 					{
-						$mailer_tags[Mailer::T_MESSAGE] = $template;
+						$mailer_tags['body'] = $template;
 					}
 
 					foreach ($mailer_tags as &$value)
@@ -183,14 +184,16 @@ class Hooks
 						$value = $patron($value, $bind);
 					}
 
-					$message = $mailer_tags[Mailer::T_MESSAGE];
+					$message = $mailer_tags['body'];
 
-					if (!$mailer)
+					if ($mailer)
 					{
-						$mailer = new Mailer($mailer_tags);
+						$mailer($mailer_tags);
 					}
-
-					$mailer();
+					else
+					{
+						$core->mail($mailer_tags);
+					}
 				}
 
 				new Form\NotifyEvent

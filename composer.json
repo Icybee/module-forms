@@ -22,6 +22,9 @@
 		"icanboogie/module-installer": "*",
 		"icybee/module-nodes": "2.x"
 	},
+	"suggest": {
+		"icanboogie/mailer": "A library designed to handle emails generation and sending.",
+	},
 	"autoload": {
 		"classmap": [ "lib" ]
 	}
