@@ -11,12 +11,10 @@
 
 namespace Icybee\Modules\Forms;
 
-use ICanBoogie\Operation;
-
 /**
- * Interface for forms that can alter the notify parameters.
+ * Interface for forms that which to alter the notify parameters.
  */
-interface AlterNotify
+interface AlterFormNotifyParams
 {
-	function alter_notify(NotifyParams $notify_params, Form $record, Operation\ProcessEvent $event, Operation $operation);
+	function alter_form_notify_params(NotifyParams $notify_params);
 }

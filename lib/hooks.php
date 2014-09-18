@@ -11,9 +11,9 @@
 
 namespace Icybee\Modules\Forms;
 
-use ICanBoogie\Exception;
 use ICanBoogie\Operation;
 use ICanBoogie\Mailer;
+use ICanBoogie\Operation\ProcessEvent;
 
 class Hooks
 {
@@ -35,14 +35,14 @@ class Hooks
 
 		if (!$form)
 		{
-			throw new Exception('Unable to retrieve form using supplied conditions: %conditions', array('%conditions' => json_encode($args['select'])));
+			throw new \Exception(\ICanBoogie\format('Unable to retrieve form using supplied conditions: %conditions', array('%conditions' => json_encode($args['select']))));
 		}
 
 		new \BlueTihi\Context\LoadedNodesEvent($patron->context, array($form));
 
 		if (!$form->is_online)
 		{
-			throw new Exception('The form %title is offline', array('%title' => $form->title));
+			throw new \Exception(\ICanBoogie\format('The form %title is offline', array('%title' => $form->title)));
 		}
 
 		return (string) $form;
@@ -119,17 +119,19 @@ class Hooks
 
 				];
 
-				$notify_params = new NotifyParams
-				(
-					array
-					(
-						'rc' => &$rc,
-						'bind' => &$bind,
-						'template' => &$template,
-						'mailer' => &$mailer,
-						'mailer_tags' => &$mailer_tags
-					)
-				);
+				$notify_params = new NotifyParams([
+
+					'record' => $record,
+					'event' => $event,
+					'operation' => $operation,
+
+					'rc' => &$rc,
+					'bind' => &$bind,
+					'template' => &$template,
+					'mailer' => &$mailer,
+					'mailer_tags' => &$mailer_tags
+
+				]);
 
 				new Form\BeforeAlterNotifyEvent
 				(
@@ -141,9 +143,9 @@ class Hooks
 					)
 				);
 
-				if ($form instanceof AlterNotify || method_exists($form, 'alter_notify')) // TODO-20130122: remove method_exists()
+				if ($form instanceof AlterFormNotifyParams)
 				{
-					$form->alter_notify($notify_params, $record, $event, $operation);
+					$form->alter_form_notify_params($notify_params);
 				}
 
 				new Form\AlterNotifyEvent
@@ -186,13 +188,15 @@ class Hooks
 
 					$message = $mailer_tags['body'];
 
+					new Form\AlterMailerTagsEvent($record, $mailer_tags);
+
 					if ($mailer)
 					{
 						$mailer($mailer_tags);
 					}
 					else
 					{
-						$core->mail($mailer_tags);
+						$rc = $core->mail($mailer_tags);
 					}
 				}
 
@@ -236,11 +240,11 @@ class NotifyParams
 	public $template;
 
 	/**
-	 * Reference to the mailer object.
+	 * Reference to the mailer instance.
 	 *
 	 * Use this property to provide your own mailer.
 	 *
-	 * @var \ICanBoogie\Mailer
+	 * @var mixed
 	 */
 	public $mailer;
 
@@ -251,9 +255,30 @@ class NotifyParams
 	 */
 	public $mailer_tags;
 
-	public function __construct(array $input)
+	/**
+	 * The {@link Form} instance.
+	 *
+	 * @var Form
+	 */
+	public $record;
+
+	/**
+	 * The event that triggered the notification.
+	 *
+	 * @var \ICanBoogie\Operation\ProcessEvent
+	 */
+	public $event;
+
+	/**
+	 * The operation that triggered the event.
+	 *
+	 * @param \ICanBoogie\Operation
+	 */
+	public $operation;
+
+	public function __construct(array $params)
 	{
-		foreach ($input as $k => &$v)
+		foreach ($params as $k => &$v)
 		{
 			$this->$k = &$v;
 		}
@@ -387,5 +412,17 @@ class NotifyEvent extends \ICanBoogie\Event
 	public function __construct(\Icybee\Modules\Forms\Form $target, array $payload)
 	{
 		parent::__construct($target, 'notify', $payload);
+	}
+}
+
+class AlterMailerTagsEvent extends \ICanBoogie\Event
+{
+	public $mailer_tags;
+
+	public function __construct(\Icybee\Modules\Forms\Form $target, array &$mailer_tags)
+	{
+		$this->mailer_tags = &$mailer_tags;
+
+		parent::__construct($target, 'alter_mailer_tags');
 	}
 }
