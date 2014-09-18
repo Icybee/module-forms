@@ -12,7 +12,6 @@
 namespace Icybee\Modules\Forms;
 
 use ICanBoogie\Debug;
-use ICanBoogie\Exception;
 use ICanBoogie\Operation;
 
 use Brickrouge\Button;
@@ -86,7 +85,7 @@ class Form extends \Icybee\Modules\Nodes\Node
 
 		if (empty($models[$modelid]))
 		{
-			throw new Exception('Unknown model id: %id', array('%id' => $modelid), 404);
+			throw new \Exception(\ICanBoogie\format('Unknown model id: %id', array('%id' => $modelid), 404));
 		}
 
 		return $models[$modelid];
