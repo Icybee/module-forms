@@ -12,7 +12,6 @@
 namespace Icybee\Modules\Forms;
 
 use ICanBoogie\Operation;
-use ICanBoogie\Mailer;
 use ICanBoogie\Operation\ProcessEvent;
 
 class Hooks
