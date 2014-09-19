@@ -16,40 +16,35 @@ use Brickrouge\Text;
 
 class QuickContactForm extends \Brickrouge\Form
 {
-	public function __construct($tags, $dummy=null)
+	public function __construct(array $attributes=[])
 	{
-		parent::__construct
-		(
-			\ICanBoogie\array_merge_recursive
-			(
-				$tags, array
-				(
-					self::RENDERER => 'Simple',
+		parent::__construct(\ICanBoogie\array_merge_recursive($attributes, [
 
-					Element::CHILDREN => array
-					(
-						'email' => new Text
-						(
-							array
-							(
-								Element::LABEL => 'Votre e-mail',
-								Element::REQUIRED => true,
-								Element::VALIDATOR => array('Brickrouge\Form::validate_email')
-							)
-						),
+			self::RENDERER => 'Simple',
 
-						'message' => new Element
-						(
-							'textarea', array
-							(
-								self::LABEL_MISSING => 'Message',
-								Element::REQUIRED => true
-							)
-						)
-					)
-				)
-			)
-		);
+			Element::CHILDREN => [
+
+				'email' => new Text([
+
+					Element::LABEL_MISSING => 'Votre e-mail',
+					Element::REQUIRED => true,
+					Element::VALIDATOR => [ 'Brickrouge\Form::validate_email' ],
+
+					'placeholder' => "Votre e-mail"
+
+				]),
+
+				'message' => new Element('textarea', [
+
+					Element::LABEL_MISSING => 'Message',
+					Element::REQUIRED => true,
+
+					'placeholder' => "Votre message"
+
+				])
+
+			]
+		]));
 	}
 
 	static public function getConfig() // TODO-20120304: refactor this
