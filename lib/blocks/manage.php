@@ -74,7 +74,7 @@ class ModelIdColumn extends Column
 		}
 		else
 		{
-			return new Alert("Undefined model: $modelid", array(Alert::CONTEXT => Alert::CONTEXT_ERROR, Alert::UNDISSMISABLE => true));
+			return new Alert("Undefined model: $modelid", array(Alert::CONTEXT => Alert::CONTEXT_ERROR, Alert::UNDISMISSABLE => true));
 		}
 
 		return new FilterDecorator($record, $property, $this->is_filtering, $label);
