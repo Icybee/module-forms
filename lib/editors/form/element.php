@@ -20,16 +20,12 @@ class FormEditorElement extends PopForm implements \Icybee\Modules\Editor\Editor
 {
 	protected $selector;
 
-	public function __construct(array $attributes=array())
+	public function __construct(array $attributes=[])
 	{
-		parent::__construct
-		(
-			'select', array
-			(
-				Element::DESCRIPTION => 'Sélectionner le formulaire à afficher.'
-			)
+		parent::__construct('select', [
 
-			+ $attributes
-		);
+			Element::DESCRIPTION => 'Sélectionner le formulaire à afficher.'
+
+		] + $attributes);
 	}
 }

@@ -27,12 +27,11 @@ class PostOperation extends \ICanBoogie\Operation
 	 */
 	protected function get_controls()
 	{
-		return array
-		(
-			self::CONTROL_FORM => true
-		)
+		return [
 
-		+ parent::get_controls();
+			self::CONTROL_FORM => true
+
+		] + parent::get_controls();
 	}
 
 	/**

@@ -13,15 +13,13 @@ namespace Icybee\Modules\Forms;
 
 class ManageBlock extends \Icybee\Modules\Nodes\ManageBlock
 {
-	public function __construct(Module $module, array $attributes=array())
+	public function __construct(Module $module, array $attributes=[])
 	{
-		parent::__construct
-		(
-			$module, $attributes + array
-			(
-				self::T_COLUMNS_ORDER => array('title', 'is_online', 'modelid', 'uid', 'updated_at')
-			)
-		);
+		parent::__construct($module, $attributes + [
+
+				self::T_COLUMNS_ORDER => [ 'title', 'is_online', 'modelid', 'uid', 'updated_at' ]
+
+		]);
 	}
 
 	/**
@@ -31,10 +29,11 @@ class ManageBlock extends \Icybee\Modules\Nodes\ManageBlock
 	 */
 	protected function get_available_columns()
 	{
-		return array_merge(parent::get_available_columns(), array
-		(
+		return array_merge(parent::get_available_columns(), [
+
 			'modelid' => __CLASS__ . '\ModelIdColumn'
-		));
+
+		]);
 	}
 }
 
@@ -57,16 +56,13 @@ class ModelIdColumn extends Column
 
 	public function render_cell($record)
 	{
-		global $core;
-
 		if (empty(self::$modelid_models))
 		{
-			self::$modelid_models = $core->configs->synthesize('formmodels', 'merge');
+			self::$modelid_models = \ICanBoogie\app()->configs->synthesize('formmodels', 'merge');
 		}
 
 		$property = $this->id;
 		$modelid = $record->$property;
-		$label = $modelid;
 
 		if (isset(self::$modelid_models[$modelid]))
 		{
@@ -74,7 +70,12 @@ class ModelIdColumn extends Column
 		}
 		else
 		{
-			return new Alert("Undefined model: $modelid", array(Alert::CONTEXT => Alert::CONTEXT_ERROR, Alert::UNDISMISSABLE => true));
+			return new Alert("Undefined model: $modelid", [
+
+				Alert::CONTEXT => Alert::CONTEXT_ERROR,
+				Alert::UNDISMISSABLE => true
+
+			]);
 		}
 
 		return new FilterDecorator($record, $property, $this->is_filtering, $label);

@@ -18,91 +18,71 @@ class PressContactForm extends \Brickrouge\Form
 {
 	public function __construct($tags, $dummy=null)
 	{
-		parent::__construct
-		(
-			\ICanBoogie\array_merge_recursive
-			(
-				$tags, array
-				(
-					Element::CHILDREN => array
-					(
-						'gender' => new Element
-						(
-							Element::TYPE_RADIO_GROUP, array
-							(
-								self::LABEL => 'Gender',
-								Element::OPTIONS => array('salutation.misses', 'salutation.miss', 'salutation.mister'),
-								Element::REQUIRED => true
-							)
-						),
+		parent::__construct(\ICanBoogie\array_merge_recursive($tags, [
 
-						'lastname' => new Text
-						(
-							array
-							(
-								self::LABEL => 'Lastname',
-								Element::REQUIRED => true
-							)
-						),
+			Element::CHILDREN => [
 
-						'firstname' => new Text
-						(
-							array
-							(
-								self::LABEL => 'Firstname',
-								Element::REQUIRED => true
-							)
-						),
+				'gender' => new Element(Element::TYPE_RADIO_GROUP, [
 
-						'media' => new Text
-						(
-							array
-							(
-								self::LABEL => 'Média'
-							)
-						),
+					self::LABEL => 'Gender',
+					Element::OPTIONS => [ 'salutation.misses', 'salutation.miss', 'salutation.mister' ],
+					Element::REQUIRED => true
 
-						'email' => new Text
-						(
-							array
-							(
-								self::LABEL => 'E-Mail',
-								Element::REQUIRED => true,
-								Element::VALIDATOR => array('Brickrouge\Form::validate_email')
-							)
-						),
+				]),
 
-						'subject' => new Text
-						(
-							array
-							(
-								self::LABEL => 'Subject',
-								Element::REQUIRED => true
-							)
-						),
+				'lastname' => new Text([
 
-						'message' => new Element
-						(
-							'textarea', array
-							(
-								self::LABEL => 'Your message'
-							)
-						)
-					)
-				)
-			)
-		);
+					self::LABEL => 'Lastname',
+					Element::REQUIRED => true
+
+				]),
+
+				'firstname' => new Text([
+
+					self::LABEL => 'Firstname',
+					Element::REQUIRED => true
+
+				]),
+
+				'media' => new Text([
+
+					self::LABEL => 'Média'
+
+				]),
+
+				'email' => new Text([
+
+					self::LABEL => 'E-Mail',
+					Element::REQUIRED => true,
+					Element::VALIDATOR => [ 'Brickrouge\Form::validate_email' ]
+
+				]),
+
+				'subject' => new Text([
+
+					self::LABEL => 'Subject',
+					Element::REQUIRED => true
+
+				]),
+
+				'message' => new Element('textarea', [
+
+					self::LABEL => 'Your message'
+
+				])
+			]
+		]));
 	}
 
 	static public function get_defaults()
 	{
-		global $core;
+		$app = \ICanBoogie\app();
 
-		return array
-		(
-			'notify_destination' => $core->user->email,
-			'notify_bcc' => $core->user->email,
-			'notify_from' => $core->site->email,
+		return [
+
+			'notify_destination' => $app->user->email,
+			'notify_bcc' => $app->user->email,
+			'notify_from' => $app->site->email,
 			'notify_subject' => 'Formulaire de contact presse',
 			'notify_template' => <<<EOT
 Un message a été posté depuis le formulaire de contact presse :
@@ -115,6 +95,6 @@ Message :
 
 #{@message}
 EOT
-		);
+		];
 	}
 }

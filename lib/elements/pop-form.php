@@ -17,21 +17,21 @@ class PopForm extends Element
 {
 	public function __toString()
 	{
-		global $core;
+		$app = $this->app;
 
 		try
 		{
-			$site = $core->site;
+			$site = $app->site;
 			$value = (int) $this['value'];
 
-			$options = $core->models['forms']->select('nid, title')
+			$options = $app->models['forms']->select('nid, title')
 			->where('nid = ? OR ((siteid = 0 OR siteid = ?) AND (language = "" OR language = ?))', $value, $site->siteid, $site->language)
 			->order('title')
 			->pairs;
 
 			if (!$options)
 			{
-				$url = \Brickrouge\escape($core->site->path . '/admin/forms/new');
+				$url = \Brickrouge\escape($app->site->path . '/admin/forms/new');
 
 				return <<<EOT
 <a href="$url" class="btn btn-info">Créer un premier formulaire...</a>

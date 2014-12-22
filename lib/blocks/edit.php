@@ -15,7 +15,6 @@ use ICanBoogie\I18n;
 
 use Brickrouge\Element;
 use Brickrouge\Form;
-use Brickrouge\Text;
 
 /**
  * A block to edit forms.
@@ -32,37 +31,37 @@ class EditBlock extends \Icybee\Modules\Nodes\EditBlock
 
 	protected function lazy_get_attributes()
 	{
-		return \ICanBoogie\array_merge_recursive
-		(
-			parent::lazy_get_attributes(), array
-			(
-				Element::GROUPS => array
-				(
-					'messages' => array
-					(
-						'title' => 'messages'
-					),
+		return \ICanBoogie\array_merge_recursive(parent::lazy_get_attributes(), [
 
-					'options' => array
-					(
-						'title' => 'options'
-					),
+			Element::GROUPS => [
 
-					'operation' => array
-					(
-						'title' => 'operation'
-					)
-				)
-			)
-		);
+				'messages' => [
+
+					'title' => 'messages'
+
+				],
+
+				'options' => [
+
+					'title' => 'options'
+
+				],
+
+				'operation' => [
+
+					'title' => 'operation'
+
+				]
+			]
+		]);
 	}
 
 	protected function lazy_get_children()
 	{
-		global $core;
-
-		$models = $core->configs->synthesize('formmodels', 'merge');
-		$models_options = array();
+		$app = $this->app;
+		$editors = $app->editors;
+		$models = $app->configs->synthesize('formmodels', 'merge');
+		$models_options = [];
 
 		if ($models)
 		{
@@ -74,85 +73,67 @@ class EditBlock extends \Icybee\Modules\Nodes\EditBlock
 			asort($models_options);
 		}
 
-		$label_default_values = I18n\t('Default values');
-		$description_notify = I18n\t('description_notify', array(':link' => '<a href="http://github.com/Weirdog/WdPatron" target="_blank">WdPatron</a>'));
+		return array_merge(parent::lazy_get_children(), [
 
-		return array_merge
-		(
-			parent::lazy_get_children(), array
-			(
-				'modelid' => new Element
-				(
-					'select', array
-					(
-						Form::LABEL => 'modelid',
-						Element::REQUIRED => true,
-						Element::OPTIONS => array(null => '') + $models_options,
-						Element::LABEL_POSITION => 'before'
-					)
-				),
+			'modelid' => new Element('select', [
 
-				'before' => $core->editors['rte']->from
-				(
-					array
-					(
-						Form::LABEL => 'before',
-						Element::GROUP => 'messages',
+				Form::LABEL => 'modelid',
+				Element::REQUIRED => true,
+				Element::OPTIONS => [ null => '' ] + $models_options,
+				Element::LABEL_POSITION => 'before'
 
-						'rows' => 5
-					)
-				),
+			]),
 
-				'after' => $core->editors['rte']->from
-				(
-					array
-					(
-						Form::LABEL => 'after',
-						Element::GROUP => 'messages',
+			'before' => $editors['rte']->from([
 
-						'rows' => 5
-					)
-				),
+				Form::LABEL => 'before',
+				Element::GROUP => 'messages',
 
-				'complete' => $core->editors['rte']->from
-				(
-					array
-					(
-						Form::LABEL => 'complete',
-						Element::GROUP => 'messages',
-						Element::REQUIRED => true,
-						Element::DESCRIPTION => 'complete',
-						Element::DEFAULT_VALUE => '<p>' . I18n\t('default.complete') . '</p>',
+				'rows' => 5
+			]),
 
-						'rows' => 5
-					)
-				),
+			'after' => $editors['rte']->from([
 
-				'is_notify' => new Element
-				(
-					Element::TYPE_CHECKBOX, array
-					(
-						Element::LABEL => 'is_notify',
-						Element::GROUP => 'options',
-						Element::DESCRIPTION => 'is_notify'
-					)
-				),
+				Form::LABEL => 'after',
+				Element::GROUP => 'messages',
 
-				'notify_' => new EmailComposer
-				(
-					array
-					(
-						Element::GROUP => 'options',
-						Element::DEFAULT_VALUE => array
-						(
-							'from' => $core->site->email,
-							'destination' => $core->site->email
-						),
+				'rows' => 5
 
-						'class' => 'form-horizontal'
-					)
-				)
-			)
-		);
+			]),
+
+			'complete' => $editors['rte']->from([
+
+				Form::LABEL => 'complete',
+				Element::GROUP => 'messages',
+				Element::REQUIRED => true,
+				Element::DESCRIPTION => 'complete',
+				Element::DEFAULT_VALUE => '<p>' . I18n\t('default.complete') . '</p>',
+
+				'rows' => 5
+
+			]),
+
+			'is_notify' => new Element(Element::TYPE_CHECKBOX, [
+
+				Element::LABEL => 'is_notify',
+				Element::GROUP => 'options',
+				Element::DESCRIPTION => 'is_notify'
+
+			]),
+
+			'notify_' => new EmailComposer([
+
+				Element::GROUP => 'options',
+				Element::DEFAULT_VALUE => [
+
+					'from' => $app->site->email,
+					'destination' => $app->site->email
+
+				],
+
+				'class' => 'form-horizontal'
+
+			])
+		]);
 	}
 }

@@ -8,61 +8,43 @@ use Brickrouge\Text;
 
 class EmailComposer extends Group
 {
-	public function __construct(array $attributes=array())
+	public function __construct(array $attributes=[])
 	{
-		parent::__construct
-		(
-			\ICanBoogie\array_merge_recursive
-			(
-				array
-				(
-					self::CHILDREN => array
-					(
-						'from' => new Text
-						(
-							array
-							(
-								Group::LABEL => 'email_from'
-							)
-						),
+		parent::__construct(\ICanBoogie\array_merge_recursive([
 
-						'destination' => new Text
-						(
-							array
-							(
-								Group::LABEL => 'email_destination'
-							)
-						),
+			self::CHILDREN => [
 
-						'bcc' => new Text
-						(
-							array
-							(
-								Group::LABEL => 'email_bcc'
-							)
-						),
+				'from' => new Text([
 
-						'subject' => new Text
-						(
-							array
-							(
-								Group::LABEL => 'email_subject'
-							)
-						),
+					Group::LABEL => 'email_from'
 
-						'template' => new Element
-						(
-							'textarea', array
-							(
-								Group::LABEL => 'email_template'
-							)
-						)
-					)
-				),
+				]),
 
-				$attributes
-			)
-		);
+				'destination' => new Text([
+
+					Group::LABEL => 'email_destination'
+
+				]),
+
+				'bcc' => new Text([
+
+					Group::LABEL => 'email_bcc'
+
+				]),
+
+				'subject' => new Text([
+
+					Group::LABEL => 'email_subject'
+
+				]),
+
+				'template' => new Element('textarea', [
+
+					Group::LABEL => 'email_template'
+
+				])
+			]
+		], $attributes));
 	}
 
 	public function offsetSet($offset, $value)

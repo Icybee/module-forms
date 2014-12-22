@@ -5,22 +5,22 @@ namespace Icybee\Modules\Forms;
 use ICanBoogie\ActiveRecord\Model;
 use ICanBoogie\Module\Descriptor;
 
-return array
-(
+return [
+
 	Descriptor::ID => 'forms',
 	Descriptor::CATEGORY => 'feedback',
 	Descriptor::DESCRIPTION => 'Create forms based on models',
 	Descriptor::INHERITS => 'nodes',
-	Descriptor::MODELS => array
-	(
-		'primary' => array
-		(
+	Descriptor::MODELS => [
+
+		'primary' => [
+
 			Model::T_EXTENDS => 'nodes',
-			Model::T_SCHEMA => array
-			(
-				'fields' => array
-				(
-					'modelid' => array('varchar', 64),
+			Model::T_SCHEMA => [
+
+				'fields' => [
+
+					'modelid' => [ 'varchar', 64 ],
 
 					'before' => 'text',
 					'after' => 'text',
@@ -34,22 +34,25 @@ return array
 					'notify_template' => 'text',
 
 					'pageid' => 'foreign'
-				)
-			)
-		)
-	),
+
+				]
+			]
+		]
+	],
 
 	Descriptor::NS => __NAMESPACE__,
-	Descriptor::PERMISSIONS => array
-	(
-		'post form'
-	),
+	Descriptor::PERMISSIONS => [
 
-	Descriptor::REQUIRES => array
-	(
+		'post form'
+
+	],
+
+	Descriptor::REQUIRES => [
+
 		'editor' => '1.0'
-	),
+
+	],
 
 	Descriptor::TITLE => 'Forms',
 	Descriptor::VERSION => '1.0'
-);
+];

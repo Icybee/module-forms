@@ -24,13 +24,12 @@ class DefaultsOperation extends Operation
 	 */
 	protected function get_controls()
 	{
-		return array
-		(
+		return [
+
 			self::CONTROL_AUTHENTICATION => true,
 			self::CONTROL_PERMISSION => Module::PERMISSION_CREATE
-		)
 
-		+ parent::get_controls();
+		] + parent::get_controls();
 	}
 
 	/**
@@ -40,7 +39,7 @@ class DefaultsOperation extends Operation
 	{
 		if (!$this->key)
 		{
-			$errors['key'] = 'Missing modelid';
+			$errors['key'] = $errors->format('Missing modelid');
 
 			return false;
 		}
@@ -54,10 +53,8 @@ class DefaultsOperation extends Operation
 	 */
 	protected function process()
 	{
-		global $core;
-
 		$modelid = $this->key;
-		$models = $core->configs->synthesize('formmodels', 'merge');
+		$models = $this->app->configs->synthesize('formmodels', 'merge');
 
 		if (empty($models[$modelid]))
 		{

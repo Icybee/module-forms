@@ -2,7 +2,8 @@
 
 namespace Icybee\Modules\Forms;
 
-return array
-(
+return [
+
 	'form' => __NAMESPACE__ . '\FormEditor'
-);
+
+];

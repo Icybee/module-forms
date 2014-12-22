@@ -18,10 +18,8 @@ class Hooks
 {
 	static public function markup_form(array $args, \Patron\Engine $patron, $template)
 	{
-		global $core;
-
 		$id = $args['select'];
-		$model = $core->models['forms'];
+		$model = \ICanBoogie\app()->models['forms'];
 
 		if (is_numeric($id))
 		{
@@ -34,14 +32,14 @@ class Hooks
 
 		if (!$form)
 		{
-			throw new \Exception(\ICanBoogie\format('Unable to retrieve form using supplied conditions: %conditions', array('%conditions' => json_encode($args['select']))));
+			throw new \Exception(\ICanBoogie\format('Unable to retrieve form using supplied conditions: %conditions', [ '%conditions' => json_encode($args['select']) ]));
 		}
 
-		new \BlueTihi\Context\LoadedNodesEvent($patron->context, array($form));
+		new \BlueTihi\Context\LoadedNodesEvent($patron->context, [ $form ]);
 
 		if (!$form->is_online)
 		{
-			throw new \Exception(\ICanBoogie\format('The form %title is offline', array('%title' => $form->title)));
+			throw new \Exception(\ICanBoogie\format('The form %title is offline', [ '%title' => $form->title ]));
 		}
 
 		return (string) $form;
@@ -83,8 +81,7 @@ class Hooks
 	 */
 	static public function on_operation_get_form(Operation\GetFormEvent $event, Operation $operation)
 	{
-		global $core;
-
+		$app = \ICanBoogie\app();
 		$request = $event->request;
 
 		if (!$request[Module::OPERATION_POST_ID])
@@ -92,126 +89,115 @@ class Hooks
 			return;
 		}
 
-		$record = $core->models['forms'][(int) $request[Module::OPERATION_POST_ID]];
+		$record = $app->models['forms'][(int) $request[Module::OPERATION_POST_ID]];
 		$form = $record->form;
 
 		$event->form = $form;
 		$event->stop();
 
-		$core->events->attach
-		(
-			get_class($operation) . '::process', function(Operation\ProcessEvent $event, Operation $operation) use ($record, $form)
+		$app->events->attach(get_class($operation) . '::process', function(Operation\ProcessEvent $event, Operation $operation) use ($app, $record, $form) {
+
+			$rc = $event->rc;
+			$bind = $event->request->params;
+			$template = $record->notify_template;
+			$mailer = null;
+			$mailer_tags = [
+
+				'bcc' => $record->notify_bcc,
+				'to' => $record->notify_destination,
+				'from' => $record->notify_from,
+				'subject' => $record->notify_subject,
+				'body' => null
+
+			];
+
+			$notify_params = new NotifyParams([
+
+				'record' => $record,
+				'event' => $event,
+				'operation' => $operation,
+
+				'rc' => &$rc,
+				'bind' => &$bind,
+				'template' => &$template,
+				'mailer' => &$mailer,
+				'mailer_tags' => &$mailer_tags
+
+			]);
+
+			new Form\BeforeAlterNotifyEvent($record, [
+
+				'params' => $notify_params,
+				'event' => $event,
+				'operation' => $operation
+
+			]);
+
+			if ($form instanceof AlterFormNotifyParams)
 			{
-				global $core;
-
-				$rc = $event->rc;
-				$bind = $event->request->params;
-				$template = $record->notify_template;
-				$mailer = null;
-				$mailer_tags = [
-
-					'bcc' => $record->notify_bcc,
-					'to' => $record->notify_destination,
-					'from' => $record->notify_from,
-					'subject' => $record->notify_subject,
-					'body' => null
-
-				];
-
-				$notify_params = new NotifyParams([
-
-					'record' => $record,
-					'event' => $event,
-					'operation' => $operation,
-
-					'rc' => &$rc,
-					'bind' => &$bind,
-					'template' => &$template,
-					'mailer' => &$mailer,
-					'mailer_tags' => &$mailer_tags
-
-				]);
-
-				new Form\BeforeAlterNotifyEvent
-				(
-					$record, array
-					(
-						'params' => $notify_params,
-						'event' => $event,
-						'operation' => $operation
-					)
-				);
-
-				if ($form instanceof AlterFormNotifyParams)
-				{
-					$form->alter_form_notify_params($notify_params);
-				}
-
-				new Form\AlterNotifyEvent
-				(
-					$record, array
-					(
-						'params' => $notify_params,
-						'event' => $event,
-						'operation' => $operation
-					)
-				);
-
-				#
-				# The result of the operation is stored in the session and is used in the next
-				# session to present the `success` message instead of the form.
-				#
-				# Note: The result is not stored for XHR.
-				#
-
-				if (!$event->request->is_xhr)
-				{
-					$core->session->modules['forms']['rc'][$record->nid] = $rc;
-				}
-
-				$message = null;
-
-				if ($record->is_notify)
-				{
-					$patron = new \Patron\Engine();
-
-					if (!$mailer_tags['body'])
-					{
-						$mailer_tags['body'] = $template;
-					}
-
-					foreach ($mailer_tags as &$value)
-					{
-						$value = $patron($value, $bind);
-					}
-
-					$message = $mailer_tags['body'];
-
-					new Form\AlterMailerTagsEvent($record, $mailer_tags);
-
-					if ($mailer)
-					{
-						$mailer($mailer_tags);
-					}
-					else
-					{
-						$rc = $core->mail($mailer_tags);
-					}
-				}
-
-				new Form\NotifyEvent
-				(
-					$record, array
-					(
-						'params' => $notify_params,
-						'message' => &$message,
-						'event' => $event,
-						'request' => $event->request,
-						'operation' => $operation
-					)
-				);
+				$form->alter_form_notify_params($notify_params);
 			}
-		);
+
+			new Form\AlterNotifyEvent($record, [
+
+				'params' => $notify_params,
+				'event' => $event,
+				'operation' => $operation
+
+			]);
+
+			#
+			# The result of the operation is stored in the session and is used in the next
+			# session to present the `success` message instead of the form.
+			#
+			# Note: The result is not stored for XHR.
+			#
+
+			if (!$event->request->is_xhr)
+			{
+				$app->session->modules['forms']['rc'][$record->nid] = $rc;
+			}
+
+			$message = null;
+
+			if ($record->is_notify)
+			{
+				$patron = new \Patron\Engine();
+
+				if (!$mailer_tags['body'])
+				{
+					$mailer_tags['body'] = $template;
+				}
+
+				foreach ($mailer_tags as &$value)
+				{
+					$value = $patron($value, $bind);
+				}
+
+				$message = $mailer_tags['body'];
+
+				new Form\AlterMailerTagsEvent($record, $mailer_tags);
+
+				if ($mailer)
+				{
+					$mailer($mailer_tags);
+				}
+				else
+				{
+					$app->mail($mailer_tags);
+				}
+			}
+
+			new Form\NotifyEvent($record, [
+
+				'params' => $notify_params,
+				'message' => &$message,
+				'event' => $event,
+				'request' => $event->request,
+				'operation' => $operation
+
+			]);
+		});
 	}
 }
 

@@ -16,91 +16,70 @@ use Brickrouge\Text;
 
 class ContactForm extends \Brickrouge\Form
 {
-	public function __construct(array $attributes=array())
+	public function __construct(array $attributes=[])
 	{
-		parent::__construct
-		(
-			\ICanBoogie\array_merge_recursive
-			(
-				$attributes, array
-				(
-					self::RENDERER => 'Simple',
+		parent::__construct(\ICanBoogie\array_merge_recursive($attributes, [
 
-					Element::CHILDREN => array
-					(
-						'gender' => new Element
-						(
-							Element::TYPE_RADIO_GROUP, array
-							(
-								self::LABEL => 'Salutation',
-								Element::OPTIONS => array('salutation.Misses', 'salutation.Mister'),
-								Element::REQUIRED => true,
+			self::RENDERER => 'Group',
 
-								'class' => 'inline-inputs'
-							)
-						),
+			Element::CHILDREN => [
 
-						'firstname' => new Text
-						(
-							array
-							(
-								self::LABEL => 'Firstname',
-								Element::REQUIRED => true
-							)
-						),
+				'gender' => new Element(Element::TYPE_RADIO_GROUP, [
 
-						'lastname' => new Text
-						(
-							array
-							(
-								self::LABEL => 'Lastname',
-								Element::REQUIRED => true
-							)
-						),
+					self::LABEL => 'Salutation',
+					Element::OPTIONS => [ 'salutation.Misses', 'salutation.Mister' ],
+					Element::REQUIRED => true,
 
-						'company' => new Text
-						(
-							array
-							(
-								self::LABEL => 'Company'
-							)
-						),
+					'class' => 'inline-inputs'
 
-						'email' => new Text
-						(
-							array
-							(
-								self::LABEL => 'E-mail',
-								Element::REQUIRED => true,
-								Element::VALIDATOR => array('Brickrouge\Form::validate_email')
-							)
-						),
+				]),
 
-						'message' => new Element
-						(
-							'textarea', array
-							(
-								self::LABEL => 'Your message',
-								Element::REQUIRED => true
-							)
-						)
-					)
-				)
-			),
+				'firstname' => new Text([
 
-			'div'
-		);
+					self::LABEL => 'Firstname',
+					Element::REQUIRED => true
+
+				]),
+
+				'lastname' => new Text([
+
+					self::LABEL => 'Lastname',
+					Element::REQUIRED => true
+
+				]),
+
+				'company' => new Text([
+
+					self::LABEL => 'Company'
+
+				]),
+
+				'email' => new Text([
+
+					self::LABEL => 'E-mail',
+					Element::REQUIRED => true,
+					Element::VALIDATOR => [ 'Brickrouge\Form::validate_email' ]
+
+				]),
+
+				'message' => new Element('textarea', [
+
+					self::LABEL => 'Your message',
+					Element::REQUIRED => true
+
+				])
+			]
+		]));
 	}
 
 	static public function get_defaults()
 	{
-		global $core;
-
+		$app = \ICanBoogie\app();
 		$p = \Patron\Engine::PREFIX;
 
 		return array
 		(
-			'notify_destination' => $core->user->email,
+			'notify_destination' => $app->user->email,
 			'notify_from' => 'Contact <no-reply@' . preg_replace('#^www#', '', $_SERVER['SERVER_NAME']) .'>',
 			'notify_subject' => 'Formulaire de contact',
 			'notify_template' => <<<EOT

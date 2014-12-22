@@ -72,20 +72,18 @@ class Form extends \Icybee\Modules\Nodes\Node
 	/**
 	 * Returns the model definition for the form.
 	 *
-	 * @throws Exception if the form model is not defined.
+	 * @return array if the form model is not defined.
 	 *
-	 * @return array
+	 * @throws \Exception if the form model is not defined.
 	 */
 	protected function lazy_get_form_model()
 	{
-		global $core;
-
 		$modelid = $this->modelid;
-		$models = $core->configs->synthesize('formmodels', 'merge');
+		$models = $this->app->configs->synthesize('formmodels', 'merge');
 
 		if (empty($models[$modelid]))
 		{
-			throw new \Exception(\ICanBoogie\format('Unknown model id: %id', array('%id' => $modelid), 404));
+			throw new \Exception(\ICanBoogie\format('Unknown model id: %id', [ '%id' => $modelid ], 404));
 		}
 
 		return $models[$modelid];
@@ -93,8 +91,6 @@ class Form extends \Icybee\Modules\Nodes\Node
 
 	protected function get_url()
 	{
-		global $core;
-
 		if (!$this->pageid)
 		{
 			return '#form-url-not-defined';
@@ -102,7 +98,7 @@ class Form extends \Icybee\Modules\Nodes\Node
 
 		try
 		{
-			return $core->models['pages'][$this->pageid]->url;
+			return $this->app->models['pages'][$this->pageid]->url;
 		}
 		catch (\Exception $e)
 		{
@@ -119,33 +115,30 @@ class Form extends \Icybee\Modules\Nodes\Node
 	{
 		$class = $this->form_model['class'];
 
-		return new $class
-		(
-			array
-			(
-				\Brickrouge\Form::ACTIONS => new Button
-				(
-					'Send', array
-					(
-						'class' => 'btn-primary',
-						'type' => 'submit'
-					)
-				),
+		return new $class([
 
-				\Brickrouge\Form::HIDDENS => array
-				(
-					Operation::DESTINATION => 'forms',
-					Operation::NAME => Module::OPERATION_POST,
-					Module::OPERATION_POST_ID => $this->nid
-				),
+			\Brickrouge\Form::ACTIONS => new Button('Send', [
 
-				\Brickrouge\Form::VALUES => $_POST + $_GET,
+				'class' => 'btn-primary',
+				'type' => 'submit'
 
-				self::FORM_RECORD_TAG => $this,
+			]),
 
-				'id' => $this->slug
-			)
-		);
+			\Brickrouge\Form::HIDDENS => [
+
+				Operation::DESTINATION => 'forms',
+				Operation::NAME => Module::OPERATION_POST,
+				Module::OPERATION_POST_ID => $this->nid
+
+			],
+
+			\Brickrouge\Form::VALUES => $_POST + $_GET,
+
+			self::FORM_RECORD_TAG => $this,
+
+			'id' => $this->slug
+
+		]);
 	}
 
 	/**
@@ -155,13 +148,12 @@ class Form extends \Icybee\Modules\Nodes\Node
 	 */
 	public function render()
 	{
-		global $core;
-
 		#
 		# if the form was sent successfully, we return the `complete` message instead of the form.
 		#
 
-		$session = $core->session;
+		$app = $this->app;
+		$session = $app->session;
 
 		if (!empty($session->modules['forms']['rc'][$this->nid]))
 		{
@@ -186,34 +178,32 @@ class Form extends \Icybee\Modules\Nodes\Node
 				$access = 'post form';
 			}
 
-			if (!$core->user->has_permission($access, $destination))
+			if (!$app->user->has_permission($access, $destination))
 			{
 				return (string) new \Brickrouge\Alert
 				(
 					<<<EOT
 <p>You don't have permission to execute the <q>$name</q> operation on the <q>$destination</q> module,
-<a href="{$core->site->path}/admin/users.roles">the <q>{$core->user->role->name}</q> role should be modified</a>.</p>
+<a href="{$app->site->path}/admin/users.roles">the <q>{$app->user->role->name}</q> role should be modified</a>.</p>
 EOT
 					, array(), 'error'
 				);
 			}
 		}
 
-		$core->document->css->add(DIR . 'public/page.css');
+		$app->document->css->add(DIR . 'public/page.css');
 
 		$before = $this->before;
 		$after = $this->after;
 		$form = $this->form;
 
-		new Form\BeforeRenderEvent
-		(
-			$this, array
-			(
-				'before' => &$before,
-				'after' => &$after,
-				'form' => $form,
-			)
-		);
+		new Form\BeforeRenderEvent($this, [
+
+			'before' => &$before,
+			'after' => &$after,
+			'form' => $form,
+
+		]);
 
 		$normalized = \ICanBoogie\normalize($this->slug);
 
@@ -229,16 +219,14 @@ EOT
 
 		$html = $before . $form . $after;
 
-		new Form\RenderEvent
-		(
-			$this, array
-			(
-				'html' => &$html,
-				'before' => $before,
-				'after' => $after,
-				'form' => $form,
-			)
-		);
+		new Form\RenderEvent($this, [
+
+			'html' => &$html,
+			'before' => $before,
+			'after' => $after,
+			'form' => $form,
+
+		]);
 
 		return $html;
 	}

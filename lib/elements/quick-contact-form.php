@@ -49,45 +49,40 @@ class QuickContactForm extends \Brickrouge\Form
 
 	static public function getConfig() // TODO-20120304: refactor this
 	{
-		global $core;
+		$app = \ICanBoogie\app();
 
-		$email = $core->user->email;
+		$email = $app->user->email;
 
-		return array
-		(
-			Element::CHILDREN => array
-			(
-				'config[destination]' => new Text
-				(
-					array
-					(
-						self::LABEL => 'Addresse de destination',
-						Element::GROUP => 'config',
-						Element::DEFAULT_VALUE => $email
-					)
-				),
+		return [
 
-				'config' => new \WdEMailNotifyElement
-				(
-					array
-					(
-						self::LABEL => 'Paramètres du message électronique',
-						Element::GROUP => 'config',
-						Element::DEFAULT_VALUE => array
-						(
-							'from' => "Contact <{$core->site->email}>",
-							'subject' => 'Formulaire de contact',
-							'template' => <<<EOT
+			Element::CHILDREN => [
+
+				'config[destination]' => new Text([
+
+					self::LABEL => 'Addresse de destination',
+					Element::GROUP => 'config',
+					Element::DEFAULT_VALUE => $email
+
+				]),
+
+				'config' => new \WdEMailNotifyElement([
+
+					self::LABEL => 'Paramètres du message électronique',
+					Element::GROUP => 'config',
+					Element::DEFAULT_VALUE => [
+
+						'from' => "Contact <{$app->site->email}>",
+						'subject' => 'Formulaire de contact',
+						'template' => <<<EOT
 Un message a été posté depuis le formulaire de contact :
 
 E-Mail : #{@email}
 
 #{@message}
 EOT
-						)
-					)
-				)
-			)
-		);
+					]
+				])
+			]
+		];
 	}
 }
