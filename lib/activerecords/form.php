@@ -360,13 +360,13 @@ class RenderCompleteEvent extends \ICanBoogie\Event
 
 
 	/**
-	 * The event is created with the type `render:complete`.
+	 * The event is created with the type `render_complete`.
 	 *
 	 * @param \Icybee\Modules\Forms\Form $target
 	 * @param array $payload
 	 */
 	public function __construct(\Icybee\Modules\Forms\Form $target, $payload)
 	{
-		parent::__construct($target, 'render:complete', $payload);	
+		parent::__construct($target, 'render_complete', $payload);	
 	}
 }
