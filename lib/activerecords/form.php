@@ -340,7 +340,7 @@ class RenderEvent extends \ICanBoogie\Event
 }
 
 /**
- * Event class for the `Icybee\Modules\Forms\Form::render:complete` event.
+ * Event class for the `Icybee\Modules\Forms\Form::render_complete` event.
  */
 class RenderCompleteEvent extends \ICanBoogie\Event
 {
