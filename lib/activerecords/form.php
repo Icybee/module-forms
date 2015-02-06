@@ -159,12 +159,12 @@ class Form extends \Icybee\Modules\Nodes\Node
 		{
 			unset($session->modules['forms']['rc'][$this->nid]);
 
-			new Form\AfterRenderEvent
+			new Form\RenderCompleteEvent
 			(
-				$this, array
-				(
+				$this, [
+				
 				    'complete' => &$this->complete,
-				)
+				]
 			);
             
 			return '<div id="' . $this->slug . '">' . $this->complete . '</div>';
@@ -340,9 +340,9 @@ class RenderEvent extends \ICanBoogie\Event
 }
 
 /**
- * Event class for the `Icybee\Modules\Forms\Form::render:after` event.
+ * Event class for the `Icybee\Modules\Forms\Form::render:complete` event.
  */
-class AfterRenderEvent extends \ICanBoogie\Event
+class RenderCompleteEvent extends \ICanBoogie\Event
 {
 	/**
 	 * The form to render.
@@ -360,13 +360,13 @@ class AfterRenderEvent extends \ICanBoogie\Event
 
 
 	/**
-	 * The event is created with the type `render:after`.
+	 * The event is created with the type `render:complete`.
 	 *
 	 * @param \Icybee\Modules\Forms\Form $target
 	 * @param array $payload
 	 */
 	public function __construct(\Icybee\Modules\Forms\Form $target, $payload)
 	{
-		parent::__construct($target, 'render:after', $payload);	
+		parent::__construct($target, 'render:complete', $payload);	
 	}
 }
