@@ -15,8 +15,8 @@ return [
 
 		'primary' => [
 
-			Model::T_EXTENDS => 'nodes',
-			Model::T_SCHEMA => [
+			Model::EXTENDING => 'nodes',
+			Model::SCHEMA => [
 
 				'fields' => [
 
