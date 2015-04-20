@@ -40,7 +40,7 @@ EOT;
 
 			if ($this->type == 'select')
 			{
-				$options = array(null => '') + $options;
+				$options = [ null => '' ] + $options;
 			}
 
 			$this[self::OPTIONS] = $options;

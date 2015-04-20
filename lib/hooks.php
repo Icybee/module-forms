@@ -100,7 +100,6 @@ class Hooks
 			$rc = $event->rc;
 			$bind = $event->request->params;
 			$template = $record->notify_template;
-			$mailer = null;
 			$mailer_tags = [
 
 				'bcc' => $record->notify_bcc,
@@ -110,6 +109,12 @@ class Hooks
 				'body' => null
 
 			];
+
+			$mailer = function ($mailer_tags) use ($app) {
+
+				$app->mail($mailer_tags);
+
+			};
 
 			$notify_params = new NotifyParams([
 
@@ -162,7 +167,7 @@ class Hooks
 
 			if ($record->is_notify)
 			{
-				$patron = new \Patron\Engine();
+				$patron = \Patron\get_patron();
 
 				if (!$mailer_tags['body'])
 				{
@@ -181,10 +186,6 @@ class Hooks
 				if ($mailer)
 				{
 					$mailer($mailer_tags);
-				}
-				else
-				{
-					$app->mail($mailer_tags);
 				}
 			}
 
