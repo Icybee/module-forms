@@ -18,24 +18,21 @@ return [
 			Model::EXTENDING => 'nodes',
 			Model::SCHEMA => [
 
-				'fields' => [
+				'modelid' => [ 'varchar', 64 ],
 
-					'modelid' => [ 'varchar', 64 ],
+				'before' => 'text',
+				'after' => 'text',
+				'complete' => 'text',
 
-					'before' => 'text',
-					'after' => 'text',
-					'complete' => 'text',
+				'is_notify' => 'boolean',
+				'notify_destination' => 'varchar',
+				'notify_from' => 'varchar',
+				'notify_bcc' => 'varchar',
+				'notify_subject' => 'varchar',
+				'notify_template' => 'text',
 
-					'is_notify' => 'boolean',
-					'notify_destination' => 'varchar',
-					'notify_from' => 'varchar',
-					'notify_bcc' => 'varchar',
-					'notify_subject' => 'varchar',
-					'notify_template' => 'text',
+				'pageid' => 'foreign'
 
-					'pageid' => 'foreign'
-
-				]
 			]
 		]
 	],
@@ -47,12 +44,7 @@ return [
 
 	],
 
-	Descriptor::REQUIRES => [
+	Descriptor::REQUIRES => [ 'editor' ],
+	Descriptor::TITLE => "Forms"
 
-		'editor' => '1.0'
-
-	],
-
-	Descriptor::TITLE => 'Forms',
-	Descriptor::VERSION => '1.0'
 ];
