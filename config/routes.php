@@ -1,16 +1,12 @@
 <?php
 
-return [
+namespace Icybee\Modules\Forms;
 
-	'!admin:manage' => [
+use ICanBoogie\HTTP\Request;
+use Icybee\Routing\RouteMaker as Make;
 
-	],
+return Make::admin('forms', Routing\FormsAdminController::class, [
 
-	'!admin:new' => [
+	'only' => [ 'index', 'create', 'edit' ]
 
-	],
-
-	'!admin:edit' => [
-
-	]
-];
+]);
