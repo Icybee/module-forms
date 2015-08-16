@@ -15,9 +15,13 @@ use ICanBoogie\Debug;
 use ICanBoogie\Operation;
 
 use Brickrouge\Button;
-use Brickrouge\Element;
 
-class Form extends \Icybee\Modules\Nodes\Node
+use Icybee\Modules\Nodes\Node;
+
+/**
+ * @property array $form_model
+ */
+class Form extends Node
 {
 	const MODELID = 'modelid';
 	const CONFIG = 'config';
@@ -162,11 +166,11 @@ class Form extends \Icybee\Modules\Nodes\Node
 			new Form\RenderCompleteEvent
 			(
 				$this, [
-				
+
 				    'complete' => &$this->complete,
 				]
 			);
-            
+
 			return '<div id="' . $this->slug . '">' . $this->complete . '</div>';
 		}
 
@@ -367,6 +371,6 @@ class RenderCompleteEvent extends \ICanBoogie\Event
 	 */
 	public function __construct(\Icybee\Modules\Forms\Form $target, $payload)
 	{
-		parent::__construct($target, 'render_complete', $payload);	
+		parent::__construct($target, 'render_complete', $payload);
 	}
 }

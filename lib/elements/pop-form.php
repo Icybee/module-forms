@@ -12,9 +12,12 @@
 namespace Icybee\Modules\Forms;
 
 use Brickrouge\Element;
+use Icybee\Binding\ObjectBindings;
 
 class PopForm extends Element
 {
+	use ObjectBindings;
+
 	public function __toString()
 	{
 		$app = $this->app;

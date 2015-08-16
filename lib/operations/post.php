@@ -17,7 +17,7 @@ namespace Icybee\Modules\Forms;
  * Note: The form is retrieved by a hook attached to the
  * {@link \ICanBoogie\Operation\GetFormEvent} event, just like any other operation.
  *
- * @property \ICanBoogie\Form $form
+ * @property \Brickrouge\Form $form
  * @property Form $record
  */
 class PostOperation extends \ICanBoogie\Operation

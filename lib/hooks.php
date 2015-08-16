@@ -371,7 +371,7 @@ class NotifyEvent extends \ICanBoogie\Event
 	/**
 	 * The operation `process` event.
 	 *
-	 * @var \ICanBoogie\OperationProcessEvent
+	 * @var \ICanBoogie\Operation\ProcessEvent
 	 */
 	public $event;
 

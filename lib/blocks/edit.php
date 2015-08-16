@@ -107,7 +107,7 @@ class EditBlock extends \Icybee\Modules\Nodes\EditBlock
 				Element::GROUP => 'messages',
 				Element::REQUIRED => true,
 				Element::DESCRIPTION => 'complete',
-				Element::DEFAULT_VALUE => '<p>' . I18n\t('default.complete') . '</p>',
+				Element::DEFAULT_VALUE => '<p>' . $this->t('default.complete') . '</p>',
 
 				'rows' => 5
 

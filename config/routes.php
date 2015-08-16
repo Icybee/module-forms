@@ -7,6 +7,7 @@ use Icybee\Routing\RouteMaker as Make;
 
 return Make::admin('forms', Routing\FormsAdminController::class, [
 
-	'only' => [ 'index', 'create', 'edit' ]
+	'id_name' => 'nid',
+	'only' => [ 'index', 'create', 'edit', 'confirm-delete' ]
 
 ]);

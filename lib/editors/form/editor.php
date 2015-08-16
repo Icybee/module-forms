@@ -50,7 +50,7 @@ class FormEditor implements \Icybee\Modules\Editor\Editor
 	/**
 	 * Returns a _Form_ active record.
 	 *
-	 * @return Icybee\Modules\Forms\Form
+	 * @return \Icybee\Modules\Forms\Form
 	 *
 	 * @see Icybee\Modules\Editor.Editor::render()
 	 */
