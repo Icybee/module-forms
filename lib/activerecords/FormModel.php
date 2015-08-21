@@ -11,7 +11,9 @@
 
 namespace Icybee\Modules\Forms;
 
-class Model extends \Icybee\Modules\Nodes\Model
+use Icybee\Modules\Nodes\NodeModel;
+
+class FormModel extends NodeModel
 {
 
 }
