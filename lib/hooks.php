@@ -112,6 +112,8 @@ class Hooks
 
 			$mailer = function ($mailer_tags) use ($app) {
 
+				/* @var $app \ICanBoogie\Core|\ICanBoogie\Binding\Mailer\CoreBindings */
+
 				$app->mail($mailer_tags);
 
 			};
