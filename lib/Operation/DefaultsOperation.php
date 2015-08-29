@@ -9,10 +9,12 @@
  * file that was distributed with this source code.
  */
 
-namespace Icybee\Modules\Forms;
+namespace Icybee\Modules\Forms\Operation;
 
 use ICanBoogie\Errors;
 use ICanBoogie\Operation;
+
+use Icybee\Modules\Forms\Module;
 
 /**
  * Returns model specific default values for the form.
@@ -34,6 +36,8 @@ class DefaultsOperation extends Operation
 
 	/**
 	 * Validates the operation unles the operation key is not defined.
+	 *
+	 * @inheritdoc
 	 */
 	protected function validate(Errors $errors)
 	{
@@ -60,7 +64,7 @@ class DefaultsOperation extends Operation
 		{
 			\ICanBoogie\log_error("Unknown model.");
 
-			return;
+			return null;
 		}
 
 		$model = $models[$modelid];

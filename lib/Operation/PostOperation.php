@@ -9,10 +9,13 @@
  * file that was distributed with this source code.
  */
 
-namespace Icybee\Modules\Forms;
+namespace Icybee\Modules\Forms\Operation;
 
 use ICanBoogie\Errors;
 use ICanBoogie\Operation;
+
+use Icybee\Modules\Forms\Form;
+use Icybee\Modules\Forms\Module;
 
 /**
  * Post a form.
