@@ -11,6 +11,7 @@
 
 namespace Icybee\Modules\Forms;
 
+use Brickrouge\Element;
 use ICanBoogie\Debug;
 use ICanBoogie\Operation;
 
@@ -19,7 +20,10 @@ use Brickrouge\Button;
 use Icybee\Modules\Nodes\Node;
 
 /**
+ * @method string render() [prototype method] Renders the form.
+ *
  * @property array $form_model
+ * @property \Brickrouge\Form $form
  */
 class Form extends Node
 {
@@ -145,104 +149,6 @@ class Form extends Node
 		]);
 	}
 
-	/**
-	 * Renders the record into an HTML form.
-	 *
-	 * @return string
-	 */
-	public function render()
-	{
-		#
-		# if the form was sent successfully, we return the `complete` message instead of the form.
-		#
-
-		$app = $this->app;
-		$session = $app->session;
-
-		if (!empty($session->modules['forms']['rc'][$this->nid]))
-		{
-			unset($session->modules['forms']['rc'][$this->nid]);
-
-			new Form\RenderCompleteEvent
-			(
-				$this, [
-
-				    'complete' => &$this->complete,
-				]
-			);
-
-			return '<div id="' . $this->slug . '">' . $this->complete . '</div>';
-		}
-
-		$form = $this->form;
-
-		if (isset($form->hiddens[Operation::DESTINATION]) && isset($form->hiddens[Operation::NAME]))
-		{
-			$destination = $form->hiddens[Operation::DESTINATION];
-			$name = $access = $form->hiddens[Operation::NAME];
-
-			if ($name == 'save')
-			{
-				$access = Module::PERMISSION_CREATE;
-			}
-			else if ($name == 'post' && $destination == 'forms')
-			{
-				$access = 'post form';
-			}
-
-			if (!$app->user->has_permission($access, $destination))
-			{
-				return (string) new \Brickrouge\Alert
-				(
-					<<<EOT
-<p>You don't have permission to execute the <q>$name</q> operation on the <q>$destination</q> module,
-<a href="{$app->site->path}/admin/users.roles">the <q>{$app->user->role->name}</q> role should be modified</a>.</p>
-EOT
-					, array(), 'error'
-				);
-			}
-		}
-
-		$app->document->css->add(DIR . 'public/page.css');
-
-		$before = $this->before;
-		$after = $this->after;
-		$form = $this->form;
-
-		new Form\BeforeRenderEvent($this, [
-
-			'before' => &$before,
-			'after' => &$after,
-			'form' => $form,
-
-		]);
-
-		$normalized = \ICanBoogie\normalize($this->slug);
-
-		if ($before)
-		{
-			$before = '<div class="form-before form-before--' . $normalized . '">' . $before . '</div>';
-		}
-
-		if ($after)
-		{
-			$after = '<div class="form-after form-after--' . $normalized . '">' . $after . '</div>';
-		}
-
-		$html = $before . $form . $after;
-
-		new Form\RenderEvent($this, [
-
-			'html' => &$html,
-			'before' => $before,
-			'after' => $after,
-			'form' => $form,
-
-		]);
-
-		return $html;
-	}
-
 	public function __toString()
 	{
 		try
@@ -255,122 +161,5 @@ EOT
 
 			return Debug::format_alert($e);
 		}
-	}
-}
-
-namespace Icybee\Modules\Forms\Form;
-
-/**
- * Event class for the `Icybee\Modules\Forms\Form::render:before` event.
- */
-class BeforeRenderEvent extends \ICanBoogie\Event
-{
-	/**
-	 * The form to render.
-	 *
-	 * @var \Icybee\Modules\Forms\Form
-	 */
-	public $form;
-
-	/**
-	 * The HTML content before the form.
-	 *
-	 * @var string
-	 */
-	public $before;
-
-	/**
-	 * The HTML content after the form.
-	 *
-	 * @var string
-	 */
-	public $after;
-
-	/**
-	 * The event is created with the type `render:before`.
-	 *
-	 * @param \Icybee\Modules\Forms\Form $target
-	 * @param array $payload
-	 */
-	public function __construct(\Icybee\Modules\Forms\Form $target, array $payload)
-	{
-		parent::__construct($target, 'render:before', $payload);
-	}
-}
-
-/**
- * Event class for the `Icybee\Modules\Forms\Form::render` event.
- */
-class RenderEvent extends \ICanBoogie\Event
-{
-	/**
-	 * Reference to the HTML resulting of the rendering.
-	 *
-	 * @var string
-	 */
-	public $html;
-
-	/**
-	 * The form to render.
-	 *
-	 * @var \Icybee\Modules\Forms\Form
-	 */
-	public $form;
-
-	/**
-	 * The HTML content before the form.
-	 *
-	 * @var string
-	 */
-	public $before;
-
-	/**
-	 * The HTML content after the form.
-	 *
-	 * @var string
-	 */
-	public $after;
-
-	/**
-	 * The event is created with the type `render`.
-	 *
-	 * @param \Icybee\Modules\Forms\Form $target
-	 * @param array $payload
-	 */
-	public function __construct(\Icybee\Modules\Forms\Form $target, array $payload)
-	{
-		parent::__construct($target, 'render', $payload);
-	}
-}
-
-/**
- * Event class for the `Icybee\Modules\Forms\Form::render_complete` event.
- */
-class RenderCompleteEvent extends \ICanBoogie\Event
-{
-	/**
-	 * The form to render.
-	 *
-	 * @var \Icybee\Modules\Forms\Form
-	 */
-	public $form;
-
-	/**
-	 * The HTML content after form is submitted.
-	 *
-	 * @var string
-	 */
-	public $complete;
-
-
-	/**
-	 * The event is created with the type `render_complete`.
-	 *
-	 * @param \Icybee\Modules\Forms\Form $target
-	 * @param array $payload
-	 */
-	public function __construct(\Icybee\Modules\Forms\Form $target, $payload)
-	{
-		parent::__construct($target, 'render_complete', $payload);
 	}
 }

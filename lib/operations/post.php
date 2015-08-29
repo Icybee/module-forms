@@ -11,6 +11,9 @@
 
 namespace Icybee\Modules\Forms;
 
+use ICanBoogie\Errors;
+use ICanBoogie\Operation;
+
 /**
  * Post a form.
  *
@@ -20,7 +23,7 @@ namespace Icybee\Modules\Forms;
  * @property \Brickrouge\Form $form
  * @property Form $record
  */
-class PostOperation extends \ICanBoogie\Operation
+class PostOperation extends Operation
 {
 	/**
 	 * Controls for the operation: form.
@@ -45,13 +48,13 @@ class PostOperation extends \ICanBoogie\Operation
 
 		if (!$nid)
 		{
-			return;
+			return null;
 		}
 
-		return $this->module->model[$nid];
+		return $this->app->models['forms'][$nid];
 	}
 
-	protected function validate(\ICanboogie\Errors $errors)
+	protected function validate(Errors $errors)
 	{
 		return !count($errors);
 	}

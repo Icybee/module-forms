@@ -11,12 +11,8 @@
 
 namespace Icybee\Modules\Forms;
 
-use ICanBoogie;
-
-$hooks = Hooks::class . '::';
-
 return [
 
-	ICanBoogie\Operation::class . '::get_form' => $hooks . 'on_operation_get_form'
+	Form::class . '::render' => FormRenderer::class . '::from'
 
 ];
