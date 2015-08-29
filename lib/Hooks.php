@@ -12,14 +12,18 @@
 namespace Icybee\Modules\Forms;
 
 use ICanBoogie\Operation;
-use ICanBoogie\Operation\ProcessEvent;
+
+use Patron\Engine as Patron;
 
 class Hooks
 {
-	static public function markup_form(array $args, \Patron\Engine $patron, $template)
+	static public function markup_form(array $args, Patron $patron, $template)
 	{
+		/* @var $model FormModel */
+		/* @var $form Form */
+
 		$id = $args['select'];
-		$model = \ICanBoogie\app()->models['forms'];
+		$model = self::app()->models['forms'];
 
 		if (is_numeric($id))
 		{
@@ -42,7 +46,7 @@ class Hooks
 			throw new \Exception(\ICanBoogie\format('The form %title is offline', [ '%title' => $form->title ]));
 		}
 
-		return (string) $form;
+		return $form->render();
 	}
 
 	/**
@@ -52,154 +56,57 @@ class Hooks
 	 *
 	 * The {@link OPERATION_POST_ID} parameter provides the key of the form active record to load.
 	 *
-	 * If the form is successfully retrieved a callback is added to the
-	 * "<operation_class>::process" event, it is used to send a notify message with the parameters
-	 * provided by the form active record. The callback also provides further processing.
+	 * If the form is successfully retrieved an event hook is attached to the operation, it is used
+	 * to send a notify message.
 	 *
 	 * At the very end of the process, the `Icybee\Modules\Forms\Form::sent` event is fired.
 	 *
-	 * Notifying
-	 * =========
-	 *
-	 * If defined, the `alter_notify` method of the form is invoked to alter the notify options.
-	 * The method is wrapped with the `Icybee\Modules\Forms\Form::alter_notify:before` and
-	 * `Icybee\Modules\Forms\Form::alter_notify` events.
-	 *
-	 * If the `is_notify` property of the record is true a notify message is sent with the notify
-	 * options.
-	 *
-	 * Result tracking
-	 * ===============
-	 *
-	 * The result of the operation using the form is stored in the session under
-	 * `[modules][forms][rc][<record_nid>]`. This stored value is used when the form is
-	 * rendered to choose what to render. For example, if the value is empty, the form is rendered
-	 * with the `before` and `after` messages, otherwise only the `complete` message is rendered.
-	 *
-	 * @param \ICanBoogie\Operation\GetFormEvent $event
+	 * @param Operation\GetFormEvent $event
 	 * @param Operation $operation
 	 */
 	static public function on_operation_get_form(Operation\GetFormEvent $event, Operation $operation)
 	{
-		$app = \ICanBoogie\app();
 		$request = $event->request;
+		$post_id = (int) $request[Module::OPERATION_POST_ID];
 
-		if (!$request[Module::OPERATION_POST_ID])
+		if (!$post_id)
 		{
 			return;
 		}
 
-		$record = $app->models['forms'][(int) $request[Module::OPERATION_POST_ID]];
-		$form = $record->form;
+		/* @var $record Form */
 
-		$event->form = $form;
+		$app = self::app();
+		$record = $app->models['forms'][$post_id];
+		$event->form = $form = $record->form;
 		$event->stop();
 
-		$app->events->attach(get_class($operation) . '::process', function(Operation\ProcessEvent $event, Operation $operation) use ($app, $record, $form) {
+		$mailer = function(array $message) use ($app) {
 
-			$rc = $event->rc;
-			$bind = $event->request->params;
-			$template = $record->notify_template;
-			$mailer_tags = [
+			/* @var $app \ICanBoogie\Binding\Mailer\CoreBindings */
 
-				'bcc' => $record->notify_bcc,
-				'to' => $record->notify_destination,
-				'from' => $record->notify_from,
-				'subject' => $record->notify_subject,
-				'body' => null
+			return $app->mail($message);
 
-			];
+		};
 
-			$mailer = function ($mailer_tags) use ($app) {
+		$session_provider = function() use ($app) {
 
-				/* @var $app \ICanBoogie\Core|\ICanBoogie\Binding\Mailer\CoreBindings */
+			return $app->session;
 
-				$app->mail($mailer_tags);
+		};
 
-			};
+		$app->events->attach_to($operation, new FormNotifier($record, $form, $mailer, $session_provider));
+	}
 
-			$notify_params = new NotifyParams([
+	/*
+	 * Support
+	 */
 
-				'record' => $record,
-				'event' => $event,
-				'operation' => $operation,
-
-				'rc' => &$rc,
-				'bind' => &$bind,
-				'template' => &$template,
-				'mailer' => &$mailer,
-				'mailer_tags' => &$mailer_tags
-
-			]);
-
-			new Form\BeforeAlterNotifyEvent($record, [
-
-				'params' => $notify_params,
-				'event' => $event,
-				'operation' => $operation
-
-			]);
-
-			if ($form instanceof AlterFormNotifyParams)
-			{
-				$form->alter_form_notify_params($notify_params);
-			}
-
-			new Form\AlterNotifyEvent($record, [
-
-				'params' => $notify_params,
-				'event' => $event,
-				'operation' => $operation
-
-			]);
-
-			#
-			# The result of the operation is stored in the session and is used in the next
-			# session to present the `success` message instead of the form.
-			#
-			# Note: The result is not stored for XHR.
-			#
-
-			if (!$event->request->is_xhr)
-			{
-				$app->session->modules['forms']['rc'][$record->nid] = $rc;
-			}
-
-			$message = null;
-
-			if ($record->is_notify)
-			{
-				$patron = \Patron\get_patron();
-
-				if (!$mailer_tags['body'])
-				{
-					$mailer_tags['body'] = $template;
-				}
-
-				foreach ($mailer_tags as &$value)
-				{
-					$value = $patron($value, $bind);
-				}
-
-				$message = $mailer_tags['body'];
-
-				new Form\AlterMailerTagsEvent($record, $mailer_tags);
-
-				if ($mailer)
-				{
-					$mailer($mailer_tags);
-				}
-			}
-
-			new Form\NotifyEvent($record, [
-
-				'params' => $notify_params,
-				'message' => &$message,
-				'event' => $event,
-				'request' => $event->request,
-				'operation' => $operation
-
-			]);
-		});
+	/**
+	 * @return \ICanBoogie\Core|\Icybee\Binding\CoreBindings
+	 */
+	static private function app()
+	{
+		return \ICanBoogie\app();
 	}
 }
