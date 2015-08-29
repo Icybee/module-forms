@@ -18,14 +18,16 @@
 	},
 	"minimum-stability": "dev",
 	"require": {
-		"php": ">=5.4.0",
+		"php": ">=5.5.0",
 		"icanboogie/module-installer": "*",
-		"icybee/module-nodes": "2.x"
+		"icybee/module-nodes": "^2.1.0"
 	},
 	"suggest": {
 		"icanboogie/mailer": "A library designed to handle emails generation and sending."
 	},
 	"autoload": {
-		"classmap": [ "lib" ]
+		"psr-4": {
+			"Icybee\\Modules\\Forms\\": "lib"
+		}
 	}
 }
