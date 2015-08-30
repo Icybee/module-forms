@@ -9,9 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace Icybee\Modules\Forms;
+namespace Icybee\Modules\Forms\Block;
 
-class ManageBlock extends \Icybee\Modules\Nodes\ManageBlock
+use Icybee\Modules\Forms\Module;
+
+class ManageBlock extends \Icybee\Modules\Nodes\Block\ManageBlock
 {
 	public function __construct(Module $module, array $attributes=[])
 	{
@@ -41,10 +43,10 @@ class ManageBlock extends \Icybee\Modules\Nodes\ManageBlock
  * Columns
  */
 
-namespace Icybee\Modules\Forms\ManageBlock;
+namespace Icybee\Modules\Forms\Block\ManageBlock;
 
-use Icybee\ManageBlock\Column;
-use Icybee\ManageBlock\FilterDecorator;
+use Icybee\Block\ManageBlock\Column;
+use Icybee\Block\ManageBlock\FilterDecorator;
 use Brickrouge\Alert;
 
 /**
