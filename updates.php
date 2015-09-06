@@ -21,12 +21,12 @@ class Update20120101 extends Update
 			throw new AssertionFailed('assert_table_exists', 'feedback_forms');
 		}
 
-		$db("RENAME TABLE `feedback_forms` TO `forms`");
+		$db("RENAME TABLE `{prefix}feedback_forms` TO `{prefix}forms`");
 	}
 
 	public function update_constructor_type()
 	{
 		$db = $this->app->db;
-		$db("UPDATE nodes SET constructor = 'forms' WHERE constructor = 'feedback.forms'");
+		$db("UPDATE `{prefix}nodes` SET constructor = 'forms' WHERE constructor = 'feedback.forms'");
 	}
 }
