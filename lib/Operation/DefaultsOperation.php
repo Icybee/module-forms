@@ -43,7 +43,7 @@ class DefaultsOperation extends Operation
 	{
 		if (!$this->key)
 		{
-			$errors['key'] = $errors->format('Missing modelid');
+			$errors->add('key', "Missing modelid");
 
 			return false;
 		}
