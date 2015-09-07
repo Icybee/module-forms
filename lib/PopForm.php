@@ -28,7 +28,7 @@ class PopForm extends Element
 			$value = (int) $this['value'];
 
 			$options = $app->models['forms']->select('nid, title')
-			->where('nid = ? OR ((siteid = 0 OR siteid = ?) AND (language = "" OR language = ?))', $value, $site->siteid, $site->language)
+			->where('nid = ? OR ((site_id = 0 OR site_id = ?) AND (language = "" OR language = ?))', $value, $site->site_id, $site->language)
 			->order('title')
 			->pairs;
 
