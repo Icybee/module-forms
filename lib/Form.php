@@ -32,7 +32,7 @@ class Form extends Node
 	const BEFORE = 'before';
 	const AFTER = 'after';
 	const COMPLETE = 'complete';
-	const PAGEID = 'pageid';
+	const PAGE_ID = 'page_id';
 
 	const FORM_RECORD_TAG = '#form-record';
 
@@ -75,7 +75,7 @@ class Form extends Node
 	public $notify_bcc;
 	public $notify_subject;
 	public $notify_template;
-	public $pageid;
+	public $page_id;
 
 	/**
 	 * Returns the model definition for the form.
@@ -99,18 +99,18 @@ class Form extends Node
 
 	protected function get_url()
 	{
-		if (!$this->pageid)
+		if (!$this->page_id)
 		{
 			return '#form-url-not-defined';
 		}
 
 		try
 		{
-			return $this->app->models['pages'][$this->pageid]->url;
+			return $this->app->models['pages'][$this->page_id]->url;
 		}
 		catch (\Exception $e)
 		{
-			return '#missing-target-page-' . $this->pageid;
+			return '#missing-target-page-' . $this->page_id;
 		}
 	}
 

@@ -30,3 +30,19 @@ class Update20120101 extends Update
 		$db("UPDATE `{prefix}nodes` SET constructor = 'forms' WHERE constructor = 'feedback.forms'");
 	}
 }
+
+/**
+ * @module forms
+ */
+class Update2015090821 extends Update
+{
+	/**
+	 * Renames column `pageid` as `page_id`.
+	 */
+	public function update_column_page_id()
+	{
+		$this->module->model
+			->assert_has_column('pageid')
+			->rename_column('pageid', 'page_id');
+	}
+}

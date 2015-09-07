@@ -34,7 +34,7 @@ return [
 		'element.label' => [
 
 			'modelid' => 'Modèle du formulaire',
-			'pageid' => "Page sur laquelle s'affiche le formulaire",
+			'page_id' => "Page sur laquelle s'affiche le formulaire",
 			'before' => "Message précédant le formulaire",
 			'after' => "Message suivant le formulaire",
 			'complete' => "Message de remerciement"

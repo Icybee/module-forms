@@ -31,7 +31,7 @@ return [
 				'notify_subject' => 'varchar',
 				'notify_template' => 'text',
 
-				'pageid' => 'foreign'
+				'page_id' => 'foreign'
 
 			]
 		]

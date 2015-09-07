@@ -33,7 +33,7 @@ return [
 	'forms.edit_block.group.label' => [
 
 		'modelid' => 'Form model',
-		'pageid' => "Page that displays the form",
+		'page_id' => "Page that displays the form",
 		'before' => "Message before the form",
 		'after' => "Message after the form",
 		'complete' => "Message of thanks"
