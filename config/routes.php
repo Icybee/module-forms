@@ -1,12 +1,12 @@
 <?php
 
-namespace Icybee\Modules\Forms;
+namespace Icybee\Modules\Forms\Routing;
 
-use ICanBoogie\HTTP\Request;
 use Icybee\Routing\RouteMaker as Make;
 
-return Make::admin('forms', Routing\FormsAdminController::class, [
+return Make::admin('forms', FormsAdminController::class, [
 
-	'id_name' => 'nid'
+	Make::OPTION_ID_NAME => 'nid',
+	Make::OPTION_EXCEPT => Make::ACTION_CONFIG
 
 ]);
