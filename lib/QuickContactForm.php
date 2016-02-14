@@ -12,6 +12,8 @@
 namespace Icybee\Modules\Forms;
 
 use Brickrouge\Element;
+use Brickrouge\Form;
+use Brickrouge\Group;
 use Brickrouge\Text;
 
 class QuickContactForm extends \Brickrouge\Form
@@ -20,7 +22,7 @@ class QuickContactForm extends \Brickrouge\Form
 	{
 		parent::__construct(\ICanBoogie\array_merge_recursive($attributes, [
 
-			self::RENDERER => 'Simple',
+			self::RENDERER => Form\GroupRenderer::class,
 
 			Element::CHILDREN => [
 
@@ -59,7 +61,7 @@ class QuickContactForm extends \Brickrouge\Form
 
 				'config[destination]' => new Text([
 
-					self::LABEL => 'Addresse de destination',
+					Group::LABEL => 'Addresse de destination',
 					Element::GROUP => 'config',
 					Element::DEFAULT_VALUE => $email
 
@@ -67,7 +69,7 @@ class QuickContactForm extends \Brickrouge\Form
 
 				'config' => new \WdEMailNotifyElement([
 
-					self::LABEL => 'Paramètres du message électronique',
+					Group::LABEL => 'Paramètres du message électronique',
 					Element::GROUP => 'config',
 					Element::DEFAULT_VALUE => [
 

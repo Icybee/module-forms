@@ -20,7 +20,7 @@ class ContactForm extends \Brickrouge\Form
 	{
 		parent::__construct(\ICanBoogie\array_merge_recursive($attributes, [
 
-			self::RENDERER => 'Group',
+			self::RENDERER => \Brickrouge\Form\GroupRenderer::class,
 
 			Element::CHILDREN => [
 

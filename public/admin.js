@@ -10,7 +10,7 @@ window.addEvent('domready', function() {
 
 	if (toggle)
 	{
-		toggleContainer = toggle.getParent('.control-group')
+		toggleContainer = toggle.getParent('.form-group')
 		toggleContainer.addClass('group-description')
 
 		toggle.addEvent('change', checkToggle)
@@ -41,8 +41,6 @@ window.addEvent('domready', function() {
 
 					form[name].set('data-default-value', value)
 				})
-
-				Brickrouge.updateDocument(form)
 			}
 
 		}).get()

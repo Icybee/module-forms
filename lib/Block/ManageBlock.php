@@ -74,8 +74,7 @@ class ModelIdColumn extends Column
 		{
 			return new Alert("Undefined model: $modelid", [
 
-				Alert::CONTEXT => Alert::CONTEXT_ERROR,
-				Alert::UNDISMISSABLE => true
+				Alert::CONTEXT => Alert::CONTEXT_DANGER
 
 			]);
 		}

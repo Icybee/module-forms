@@ -1,4 +1,4 @@
-.control-group--is-notify:not(.enabled) + .control-group--notify {
+.form-group--is-notify:not(.enabled) + .form-group--notify {
 	display: none;
 }
 
