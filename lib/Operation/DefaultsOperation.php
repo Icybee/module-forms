@@ -11,7 +11,7 @@
 
 namespace Icybee\Modules\Forms\Operation;
 
-use ICanBoogie\Errors;
+use ICanBoogie\ErrorCollection;
 use ICanBoogie\Operation;
 
 use Icybee\Modules\Forms\Module;
@@ -39,16 +39,14 @@ class DefaultsOperation extends Operation
 	 *
 	 * @inheritdoc
 	 */
-	protected function validate(Errors $errors)
+	protected function validate(ErrorCollection $errors)
 	{
 		if (!$this->key)
 		{
-			$errors->add('key', "Missing modelid");
-
-			return false;
+			$errors->add('key', "Missing form model identifier");
 		}
 
-		return true;
+		return $errors;
 	}
 
 	/**

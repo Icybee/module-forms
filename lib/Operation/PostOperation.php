@@ -11,7 +11,7 @@
 
 namespace Icybee\Modules\Forms\Operation;
 
-use ICanBoogie\Errors;
+use ICanBoogie\ErrorCollection;
 use ICanBoogie\Operation;
 
 use Icybee\Modules\Forms\Form;
@@ -57,9 +57,12 @@ class PostOperation extends Operation
 		return $this->app->models['forms'][$nid];
 	}
 
-	protected function validate(Errors $errors)
+	/**
+	 * @inheritdoc
+	 */
+	protected function validate(ErrorCollection $errors)
 	{
-		return !count($errors);
+		return $errors;
 	}
 
 	/**
