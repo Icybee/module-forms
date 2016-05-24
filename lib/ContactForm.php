@@ -12,21 +12,23 @@
 namespace Icybee\Modules\Forms;
 
 use Brickrouge\Element;
+use Brickrouge\Form;
+use Brickrouge\Group;
 use Brickrouge\Text;
 
-class ContactForm extends \Brickrouge\Form
+class ContactForm extends Form
 {
 	public function __construct(array $attributes=[])
 	{
 		parent::__construct(\ICanBoogie\array_merge_recursive($attributes, [
 
-			self::RENDERER => \Brickrouge\Form\GroupRenderer::class,
+			self::RENDERER => Form\GroupRenderer::class,
 
 			Element::CHILDREN => [
 
 				'gender' => new Element(Element::TYPE_RADIO_GROUP, [
 
-					self::LABEL => 'Salutation',
+					Group::LABEL => 'Salutation',
 					Element::OPTIONS => [ 'salutation.Misses', 'salutation.Mister' ],
 					Element::REQUIRED => true,
 
@@ -36,35 +38,35 @@ class ContactForm extends \Brickrouge\Form
 
 				'firstname' => new Text([
 
-					self::LABEL => 'Firstname',
+					Group::LABEL => 'Firstname',
 					Element::REQUIRED => true
 
 				]),
 
 				'lastname' => new Text([
 
-					self::LABEL => 'Lastname',
+					Group::LABEL => 'Lastname',
 					Element::REQUIRED => true
 
 				]),
 
 				'company' => new Text([
 
-					self::LABEL => 'Company'
+					Group::LABEL => 'Company'
 
 				]),
 
 				'email' => new Text([
 
-					self::LABEL => 'E-mail',
+					Group::LABEL => 'E-mail',
 					Element::REQUIRED => true,
-					Element::VALIDATOR => [ 'Brickrouge\Form::validate_email' ]
+					Element::VALIDATION => 'email'
 
 				]),
 
 				'message' => new Element('textarea', [
 
-					self::LABEL => 'Your message',
+					Group::LABEL => 'Your message',
 					Element::REQUIRED => true
 
 				])

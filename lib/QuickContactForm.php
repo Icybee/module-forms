@@ -30,7 +30,7 @@ class QuickContactForm extends \Brickrouge\Form
 
 					Element::LABEL_MISSING => 'Votre e-mail',
 					Element::REQUIRED => true,
-					Element::VALIDATOR => [ 'Brickrouge\Form::validate_email' ],
+					Element::VALIDATION => 'email',
 
 					'placeholder' => "Votre e-mail"
 

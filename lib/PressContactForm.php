@@ -12,6 +12,7 @@
 namespace Icybee\Modules\Forms;
 
 use Brickrouge\Element;
+use Brickrouge\Group;
 use Brickrouge\Text;
 
 class PressContactForm extends \Brickrouge\Form
@@ -52,22 +53,22 @@ class PressContactForm extends \Brickrouge\Form
 
 				'email' => new Text([
 
-					self::LABEL => 'E-Mail',
+					Group::LABEL => 'E-Mail',
 					Element::REQUIRED => true,
-					Element::VALIDATOR => [ 'Brickrouge\Form::validate_email' ]
+					Element::VALIDATION => 'email'
 
 				]),
 
 				'subject' => new Text([
 
-					self::LABEL => 'Subject',
+					Group::LABEL => 'Subject',
 					Element::REQUIRED => true
 
 				]),
 
 				'message' => new Element('textarea', [
 
-					self::LABEL => 'Your message'
+					Group::LABEL => 'Your message'
 
 				])
 			]
