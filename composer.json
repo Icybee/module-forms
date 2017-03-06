@@ -8,7 +8,7 @@
 		{
 			"name": "Olivier Laviale",
 			"email": "olivier.laviale@gmail.com",
-			"homepage": "http://www.weirdog.com/",
+			"homepage": "http://olvlvl.com/",
 			"role" : "Developer"
 		}
 	],
@@ -17,10 +17,12 @@
 		"source": "https://github.com/Icybee/module-forms"
 	},
 	"minimum-stability": "dev",
+	"prefer-stable": true,
+	"prefer-dist": true,
 	"require": {
-		"php": ">=5.5.0",
-		"icanboogie/module-installer": "^1.2.3",
-		"icybee/module-nodes": "^3.0.0"
+		"php": ">=5.5",
+		"icanboogie/module-installer": "^1.2",
+		"icybee/module-nodes": "^3.0"
 	},
 	"suggest": {
 		"icanboogie/mailer": "A library designed to handle emails generation and sending."
