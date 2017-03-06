@@ -1,7 +1,7 @@
 # customization
 
 PACKAGE_NAME = icybee/module-forms
-PACKAGE_VERSION = 3.0.0
+PACKAGE_VERSION = 4.0
 COMPOSER_ENV = COMPOSER_ROOT_VERSION=$(PACKAGE_VERSION)
 
 # do not edit the following lines

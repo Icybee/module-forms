@@ -1,4 +1,4 @@
-# Forms [![Build Status](https://travis-ci.org/Icybee/modules-forms.png?branch=2.0)](https://travis-ci.org/Icybee/modules-forms)
+# Forms [![Build Status](https://travis-ci.org/Icybee/modules-forms.png)](https://travis-ci.org/Icybee/modules-forms)
 
 The Forms module (`forms`) provides form management support to the CMS [Icybee](http://icybee.org).
 
@@ -8,7 +8,7 @@ The Forms module (`forms`) provides form management support to the CMS [Icybee](
 
 ## Requirement
 
-The package requires PHP 5.4 or later.
+The package requires PHP 5.6 or later.
 
 
 
@@ -54,7 +54,7 @@ directory can later be cleaned with the `make clean` command.
 
 The package is continuously tested by [Travis CI](http://about.travis-ci.org/).
 
-[![Build Status](https://travis-ci.org/Icybee/modules-forms.png?branch=2.0)](https://travis-ci.org/Icybee/modules-forms)
+[![Build Status](https://travis-ci.org/Icybee/modules-forms.png)](https://travis-ci.org/Icybee/modules-forms)
 
 
 
