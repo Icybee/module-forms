@@ -24,6 +24,9 @@
 		"icanboogie/module-installer": "^1.2",
 		"icybee/module-nodes": "^4.0"
 	},
+	"require-dev": {
+		"icybee/module-editor": "^4.0"
+	},
 	"suggest": {
 		"icanboogie/mailer": "A library designed to handle emails generation and sending."
 	},

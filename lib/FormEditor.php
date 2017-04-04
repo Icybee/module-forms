@@ -11,7 +11,7 @@
 
 namespace Icybee\Modules\Forms;
 
-use ICanBoogie\Core;
+use function ICanBoogie\app;
 
 /**
  * "Form" editor.
@@ -19,9 +19,7 @@ use ICanBoogie\Core;
 class FormEditor implements \Icybee\Modules\Editor\Editor
 {
 	/**
-	 * Returns content as is.
-	 *
-	 * @see Icybee\Modules\Editor.Editor::serialize()
+	 * @inheritdoc
 	 */
 	public function serialize($content)
 	{
@@ -29,18 +27,17 @@ class FormEditor implements \Icybee\Modules\Editor\Editor
 	}
 
 	/**
-	 * Returns serialized content as is.
-	 *
-	 * @see Icybee\Modules\Editor.Editor::unserialize()
+	 * @inheritdoc
 	 */
 	public function unserialize($serialized_content)
 	{
 		return $serialized_content;
 	}
+
 	/**
-	 * @return FormEditorElement
+	 * @inheritdoc
 	 *
-	 * @see Icybee\Modules\Editor.Editor::from()
+	 * @return FormEditorElement
 	 */
 	public function from(array $attributes)
 	{
@@ -48,14 +45,12 @@ class FormEditor implements \Icybee\Modules\Editor\Editor
 	}
 
 	/**
-	 * Returns a _Form_ active record.
+	 * @inheritdoc
 	 *
-	 * @return \Icybee\Modules\Forms\Form
-	 *
-	 * @see Icybee\Modules\Editor.Editor::render()
+	 * @return Form
 	 */
 	public function render($content)
 	{
-		return $content ? Core::get()->models['forms'][$content] : null;
+		return $content ? app()->models['forms'][$content] : null;
 	}
 }

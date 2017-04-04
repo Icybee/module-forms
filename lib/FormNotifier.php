@@ -2,7 +2,6 @@
 
 namespace Icybee\Modules\Forms;
 
-use ICanBoogie\Core;
 use ICanBoogie\Operation;
 
 use Brickrouge\Form as FormElement;

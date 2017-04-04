@@ -11,6 +11,7 @@
 
 namespace Icybee\Modules\Forms;
 
+use function ICanBoogie\app;
 use ICanBoogie\Operation;
 
 use Patron\Engine as Patron;
@@ -23,7 +24,7 @@ class Hooks
 		/* @var $form Form */
 
 		$id = $args['select'];
-		$model = self::app()->models['forms'];
+		$model = app()->models['forms'];
 
 		if (is_numeric($id))
 		{
@@ -76,14 +77,12 @@ class Hooks
 
 		/* @var $record Form */
 
-		$app = self::app();
+		$app = app();
 		$record = $app->models['forms'][$post_id];
 		$event->form = $form = $record->form;
 		$event->stop();
 
 		$mailer = function(array $message) use ($app) {
-
-			/* @var $app \ICanBoogie\Binding\Mailer\CoreBindings */
 
 			return $app->mail($message);
 
@@ -96,17 +95,5 @@ class Hooks
 		};
 
 		$app->events->attach_to($operation, new FormNotifier($record, $form, $mailer, $session_provider));
-	}
-
-	/*
-	 * Support
-	 */
-
-	/**
-	 * @return \ICanBoogie\Core|\Icybee\Binding\CoreBindings
-	 */
-	static private function app()
-	{
-		return \ICanBoogie\app();
 	}
 }
