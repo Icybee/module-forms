@@ -20,8 +20,8 @@
 	"prefer-stable": true,
 	"prefer-dist": true,
 	"require": {
-		"php": ">=5.6",
-		"icanboogie/module-installer": "^1.2",
+		"php": "^5.6 || ^7.0",
+		"icanboogie/module-installer": "^4.0",
 		"icybee/module-nodes": "^4.0"
 	},
 	"require-dev": {
